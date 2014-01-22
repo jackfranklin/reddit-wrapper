@@ -40,3 +40,4 @@ wrap.listing(function(err, resp, body) {
 ## Todo
 There's lots missing here. Most importantly:
 - all listings just return the first set. Need to be able to page through content
+- make the methods return promises, as an alternative to callbacks.
