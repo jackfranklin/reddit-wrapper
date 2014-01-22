@@ -7,20 +7,39 @@ var RedditWrapper = function(options) {
 
 RedditWrapper.prototype._callUrl = function(options, callback) {
   var baseUrl = 'https://oauth.reddit.com';
-  var targetUrl = baseUrl + options.url;
+  var targetUrl = options.fullUrl || (baseUrl + options.url);
+  console.log(targetUrl);
   options.url = targetUrl;
-  if(this.includeAuthHeader) {
+  if(options.authHeader) {
     options.headers = options.headers || {};
     options.headers["Authorization"] = 'bearer ' + this.accessToken;
   }
+  delete options.authHeader;
   request(options, callback);
 };
 
 
 RedditWrapper.prototype.me = function(callback) {
   this._callUrl({
-    url: '/api/v1/me'
+    url: '/api/v1/me',
+    authHeader: true
   }, callback);
+};
+
+RedditWrapper.prototype.listing = function(options, callback) {
+  if(typeof options == 'function') {
+    callback = options;
+    options = null;
+  }
+  if(!options || !options.subReddit) {
+    this._callUrl({
+      fullUrl: 'http://www.reddit.com/hot.json'
+    }, callback);
+  } else {
+    this._callUrl({
+      fullUrl: 'http://www.reddit.com/r/' + options.subReddit + '/' + options.category + '.json'
+    }, callback);
+  }
 };
 
 
