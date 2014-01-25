@@ -9,7 +9,8 @@
   "author": "Jack Franklin",
   "license": "MIT",
   "dependencies": {
-    "request": "~2.33.0"
+    "request": "~2.33.0",
+    "underscore": "~1.5.2"
   },
   "devDependencies": {
     "nock": "~0.27.1",

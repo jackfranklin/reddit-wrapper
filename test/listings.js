@@ -41,5 +41,15 @@ test('passing subreddit and category', function(t) {
     t.ok(vimNew.isDone(), 'it made the right API request');
     t.end();
   });
+});
 
+test('passing an after parameter', function(t) {
+  var vimNew = mock('/r/vim/hot.json?after=foo');
+  wrap.listing({
+    subReddit: 'vim',
+    after: 'foo'
+  }, function(err, resp, body) {
+    t.ok(vimNew.isDone());
+    t.end();
+  });
 });

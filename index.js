@@ -1,4 +1,5 @@
 var request = require('request');
+var _ = require('underscore');
 
 var RedditWrapper = function(options) {
   this.accessToken = options.accessToken;
@@ -39,13 +40,19 @@ RedditWrapper.prototype.listing = function(options, callback) {
     options = null;
   }
   var category = (options && options.category) || 'hot';
+  if(options && options.category) delete options.category;
   if(!options || !options.subReddit) {
     this._callUrl({
       url: 'http://www.reddit.com/' + category + '.json'
     }, callback);
   } else {
-    this._callUrl({
+    var newOptions = {
       url: 'http://www.reddit.com/r/' + options.subReddit + '/' + category + '.json'
+    };
+    delete options.subReddit;
+    this._callUrl({
+      url: newOptions.url,
+      qs: options
     }, callback);
   }
 };
