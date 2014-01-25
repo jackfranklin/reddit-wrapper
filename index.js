@@ -34,6 +34,13 @@ RedditWrapper.prototype.me = function(callback) {
   }, callback);
 };
 
+RedditWrapper.prototype.subreddits = function(options, callback) {
+  var limit = options.limit || 100;
+  var type = options.category || 'popular';
+  this._callUrl({
+    url: 'http://www.reddit.com/subreddits/' + type + '.json?limit=' + limit
+  }, callback);
+}
 RedditWrapper.prototype.listing = function(options, callback) {
   if(typeof options == 'function') {
     callback = options;
