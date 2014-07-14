@@ -4,16 +4,21 @@
   "description": "A wrapper around the Reddit API",
   "main": "index.js",
   "scripts": {
-    "test": "tap ./test"
+    "test": "./node_modules/.bin/mocha test/caching.js"
   },
   "author": "Jack Franklin",
   "license": "MIT",
   "dependencies": {
+    "moment": "^2.7.0",
     "request": "~2.33.0",
+    "mongoose": "^3.8.13",
     "underscore": "~1.5.2"
   },
   "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^1.20.1",
     "nock": "~0.27.1",
-    "tap": "~0.4.8"
+    "tap": "~0.4.8",
+    "timekeeper": "0.0.4"
   }
 }

@@ -1,10 +1,33 @@
 var request = require('request');
 var _ = require('underscore');
+var mongoose = require('mongoose');
+
 
 var RedditWrapper = function(options) {
   this.accessToken = options.accessToken;
-  this.shouldParseJson = options.parseJson || false;
   this.includeAuthHeader = options || true;
+  if(options.cache != undefined) {
+    this.cache = options.cache;
+  } else {
+    this.cache = false;
+  }
+  if(this.cache) this.initCache(options.cacheConnection);
+};
+
+RedditWrapper.prototype.initCache = function(conn) {
+  mongoose.connect(conn);
+  var db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+
+  this.Cache = require('./cache.js');
+};
+
+var makeRequest = function(options, cb) {
+  request(options, function(err, resp, body) {
+    if(err) throw(err);
+    var jsonBody = JSON.parse(body);
+    callback.call(null, err, resp, jsonBody);
+  }.bind(this));
 };
 
 RedditWrapper.prototype._callUrl = function(options, callback) {
@@ -15,15 +38,25 @@ RedditWrapper.prototype._callUrl = function(options, callback) {
     options.headers = options.headers || {};
     options.headers["Authorization"] = 'bearer ' + this.accessToken;
   }
-  if(this.shouldParseJson) {
+  if(!this.cache) return makeRequest(options, callback);
+  this.Cache.findOne({ url: options.url }, function(e, cache) {
+    if(cache && cache.notExpired()) return callback(null, null, cache.data);
+
     request(options, function(err, resp, body) {
       if(err) throw(err);
       var jsonBody = JSON.parse(body);
-      callback.call(null, err, resp, jsonBody);
-    });
-  } else {
-    request(options, callback);
-  }
+
+      if(cache) {
+        this.Cache.update({ url: options.url }, { date: Date.now(), data: jsonBody }, function() {
+          callback.call(null, err, resp, jsonBody);
+        });
+      } else {
+        new this.Cache({ url: options.url, data: jsonBody }).save(function(e, cache) {
+          callback.call(null, err, resp, jsonBody);
+        });
+      }
+    }.bind(this));
+  }.bind(this));
 };
 
 
