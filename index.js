@@ -15,9 +15,11 @@ var RedditWrapper = function(options) {
 };
 
 RedditWrapper.prototype.initCache = function(conn) {
-  mongoose.connect(conn);
-  var db = mongoose.connection;
-  db.on('error', console.error.bind(console, 'connection error:'));
+  if(conn) {
+    mongoose.connect(conn);
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+  }
 
   this.Cache = require('./cache.js');
 };
