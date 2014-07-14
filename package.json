@@ -1,6 +1,6 @@
 {
   "name": "reddit-wrapper",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A wrapper around the Reddit API",
   "main": "index.js",
   "scripts": {
@@ -10,8 +10,9 @@
   "license": "MIT",
   "dependencies": {
     "moment": "^2.7.0",
-    "request": "~2.33.0",
     "mongoose": "^3.8.13",
+    "q": "^1.0.1",
+    "request": "~2.33.0",
     "underscore": "~1.5.2"
   },
   "devDependencies": {

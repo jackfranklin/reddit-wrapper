@@ -2,7 +2,6 @@ var request = require('request');
 var _ = require('underscore');
 var mongoose = require('mongoose');
 
-
 var RedditWrapper = function(options) {
   this.accessToken = options.accessToken;
   this.includeAuthHeader = options || true;
@@ -11,17 +10,7 @@ var RedditWrapper = function(options) {
   } else {
     this.cache = false;
   }
-  if(this.cache) this.initCache(options.cacheConnection);
-};
-
-RedditWrapper.prototype.initCache = function(conn) {
-  if(conn) {
-    mongoose.connect(conn);
-    var db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-  }
-
-  this.Cache = require('./cache.js');
+  if(this.cache) this.CACHE_FN = options.cacheFn;
 };
 
 var makeRequest = function(options, cb) {
@@ -41,24 +30,11 @@ RedditWrapper.prototype._callUrl = function(options, callback) {
     options.headers["Authorization"] = 'bearer ' + this.accessToken;
   }
   if(!this.cache) return makeRequest(options, callback);
-  this.Cache.findOne({ url: options.url }, function(e, cache) {
-    if(cache && cache.notExpired()) return callback(null, null, cache.data);
-
-    request(options, function(err, resp, body) {
-      if(err) throw(err);
-      var jsonBody = JSON.parse(body);
-
-      if(cache) {
-        this.Cache.update({ url: options.url }, { date: Date.now(), data: jsonBody }, function() {
-          callback.call(null, err, resp, jsonBody);
-        });
-      } else {
-        new this.Cache({ url: options.url, data: jsonBody }).save(function(e, cache) {
-          callback.call(null, err, resp, jsonBody);
-        });
-      }
-    }.bind(this));
-  }.bind(this));
+  this.CACHE_FN({
+    url: options.url,
+    callback: callback,
+    request: options
+  });
 };
 
 

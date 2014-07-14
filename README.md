@@ -2,6 +2,8 @@
 
 A very simple wrapper around Reddit's API, built for an on going side project. Currently has a very, very slim API, but as I need it more I'll develop out the API.
 
+Please don't use or rely on this yet - it's still very young and I'm currently constantly tweaking.
+
 ## Usage
 
 Primary use at the moment is to get listings:
