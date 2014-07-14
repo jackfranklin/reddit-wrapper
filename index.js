@@ -26,7 +26,7 @@ var makeRequest = function(options, cb) {
   request(options, function(err, resp, body) {
     if(err) throw(err);
     var jsonBody = JSON.parse(body);
-    callback.call(null, err, resp, jsonBody);
+    cb.call(null, err, resp, jsonBody);
   }.bind(this));
 };
 
