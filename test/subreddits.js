@@ -6,13 +6,17 @@ var wrap = new RedditWrapper({
   parseJson: true
 });
 
-test('getting subreddit listings', function(t) {
-  var subredditMock = mock('/subreddits/popular.json?limit=100');
-  wrap.subreddits({
-    type: 'popular'
-  }, function(err, resp, body) {
-    t.ok(subredditMock.isDone());
-    t.end();
-  });
-});
+var expect = require('expect.js');
 
+describe('getting subreddit listings', function() {
+  it('gets subreddit listings', function(done) {
+    var subredditMock = mock('/subreddits/popular.json?limit=100');
+    wrap.subreddits({
+      type: 'popular'
+    }, function(err, resp, body) {
+      expect(subredditMock.isDone()).to.eql(true);
+      done();
+    });
+  });
+
+});

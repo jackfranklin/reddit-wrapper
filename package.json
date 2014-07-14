@@ -4,7 +4,7 @@
   "description": "A wrapper around the Reddit API",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test/listings.js"
+    "test": "./node_modules/.bin/mocha test"
   },
   "author": "Jack Franklin",
   "license": "MIT",
