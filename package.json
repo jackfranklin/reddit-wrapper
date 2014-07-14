@@ -1,6 +1,6 @@
 {
   "name": "reddit-wrapper",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A wrapper around the Reddit API",
   "main": "index.js",
   "scripts": {
